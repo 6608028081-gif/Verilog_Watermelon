@@ -1,0 +1,53 @@
+module test1(
+    input ROTA,
+    input ROTB,
+    input SW0,
+    output reg [9:0] OUT,
+    input CLK
+    );
+reg[1:0] regrotA;
+reg[23:0] counterx;
+reg[24:0] countery;
+reg swold =1'b1;
+always @ (posedge CLK)
+    begin
+        OUT[9:7] <= 3'b111;
+        swold <= SW0;
+            regrotA[1] <= regrotA[0];
+            regrotA[0] <= ROTA;
+
+        if (regrotA[1:0] == 2'b01 )
+        begin //riseup
+            if (ROTB == 0) //cw
+            begin
+                if (counterx< 24'd24)
+                begin
+                    counterx <= counterx + 1;
+                end
+                else
+                begin
+                    counterx <= 0;
+                    OUT[2:0] <= OUT[2:0] + 3'b001;
+                end
+
+        end
+        else //ccw
+        begin
+            if (counterx< 24'd24)
+            begin
+                counterx <= counterx + 1;
+            end
+            else
+            begin
+                counterx <= 0;
+                OUT[2:0] <= OUT[2:0] - 3'b001;
+            end
+        end
+    end
+        if (swold == 1'b1 && SW0 == 1'b0)
+            OUT[6:3] <= OUT[6:3] + 4'b0001;
+
+
+end
+
+endmodule
